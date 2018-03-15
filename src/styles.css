@@ -1,0 +1,14 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import url('https://fonts.googleapis.com/css?family=Oxygen|Karla');
+
+html, body {
+	font: 14px "Karla", Arial, sans-serif;
+}
+
+.panel-heading {
+	letter-spacing: 1px;
+}
+form label {
+	font-weight: normal;
+}
