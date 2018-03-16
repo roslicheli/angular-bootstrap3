@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserService } from '.././services/user.service';
 
 @Component({
@@ -6,23 +7,52 @@ import { UserService } from '.././services/user.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
 
-  constructor(private userService: UserService) { }
+export class LoginComponent implements OnInit {
+  public token: string;
+  processing = false;
+  error = '';
+  isLoggedIn = false;
+
+  constructor(
+    private userService: UserService,
+    private router: Router
+    )
+  {}
 
   ngOnInit() {
   }
 
   doLogin(email, password) {
-  	console.log(email,password);
+    this.processing = true;
+  	console.log(this.isLoggedIn);
   	this.userService.getLogin(email,password).subscribe(
   		data => {
-  			console.log(data);
-  		}
-  		// No error or completion callbacks here. They are optional, but
-  		// you will get console errors if the Observable is in an error state.
+          this.token = data['token'];
+          console.log(this.token);
+          console.log(data['status']);
+          localStorage.setItem('currentUser', JSON.stringify({ 'user': data['user'], 'token': this.token }));
+
+          console.log(localStorage);
+          this.processing = false;
+          this.isLoggedIn = true;
+          this.router.navigate(['/dashboard']);
+  		},
+      err => {
+        console.log(err.error.message);
+        this.error = err.error.message;
+        this.processing = false;
+        this.isLoggedIn = false;
+      }
   	);
   	
   } //end doLogin
+
+  doLogout() {
+    this.token = null;
+    localStorage.removeItem('currentUser');
+    this.isLoggedIn = false;
+    this.router.navigate(['/']);  
+  } //end doLogout
 
 }

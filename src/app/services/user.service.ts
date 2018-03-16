@@ -2,26 +2,25 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
+import { environment } from '../../environments/environment';
+
+const apiURL = environment.API_URL;
+
 @Injectable()
 export class UserService { 	
- 	private headers: HttpHeaders;
+ 	private headers: HttpHeaders;    
 
     constructor(private http: HttpClient) {
-
+        console.log(apiURL);
     }
  
-    // Uses http.get() to load data from a single API endpoint
     getLogin(email: string, password: string) {
     	const httpOptions = {
     	  headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin':'*' })
     	};
 
-    	//let headers = new HttpHeaders({'Content-Type':'application/x-www-form-urlencoded', 'Allow-Control-Allow-Origin':'*'});
+        return this.http.post(apiURL+'/auth/login', {'email': email, 'password': password}, httpOptions);
+    } //end getLogin
 
-    	//this.headers = new RequestOptions({headers: headers});
 
-    	console.log(httpOptions);
-
-        return this.http.post('http://laravel-api.local/api/auth/login', {'email': email, 'password': password}, httpOptions);
-    }
-}
+} 
